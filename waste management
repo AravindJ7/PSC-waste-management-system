@@ -1,0 +1,150 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_BINS 100
+
+typedef struct {
+    int *inumBinId;
+    char cLocation[50];
+    char cWasteType[20];
+    int *inumCurrentLevel; // Current waste level in percentage
+    int *inumCapacity;     // Bin capacity
+} WasteBin;
+
+typedef struct {
+    int *inumScheduleId;
+    int *inumBinId;
+    char cCollectionDate[20];
+    char cCollectionTime[10];
+} CollectionSchedule;
+
+WasteBin bins[MAX_BINS];
+int *inumBinCount = NULL;
+CollectionSchedule schedules[MAX_BINS];
+int *inumScheduleCount = NULL;
+
+void addWasteBin() {
+    if (*inumBinCount >= MAX_BINS) {
+        printf("Cannot add more bins. Limit reached.\n");
+        return;
+    }
+
+    WasteBin bin;
+    bin.inumBinId = malloc(sizeof(int));
+    bin.inumCapacity = malloc(sizeof(int));
+    bin.inumCurrentLevel = malloc(sizeof(int));
+    *bin.inumCurrentLevel = 0; // Initial level
+
+    printf("Enter Bin ID: ");
+    scanf("%d", bin.inumBinId);
+    getchar();
+    printf("Enter Location: ");
+    scanf("%[^\n]", bin.cLocation);
+    getchar();
+    printf("Enter Waste Type (Organic/Recyclable/Hazardous): ");
+    scanf("%[^\n]", bin.cWasteType);
+    printf("Enter Bin Capacity: ");
+    scanf("%d", bin.inumCapacity);
+
+    bins[*inumBinCount] = bin;
+    (*inumBinCount)++;
+    printf("Waste Bin Added Successfully!\n");
+}
+
+void updateWasteLevel() {
+    int binId, level;
+    printf("Enter Bin ID to update: ");
+    scanf("%d", &binId);
+
+    for (int i = 0; i < *inumBinCount; i++) {
+        if (*bins[i].inumBinId == binId) {
+            printf("Enter new waste level (0-100): ");
+            scanf("%d", &level);
+            if (level < 0 || level > 100) {
+                printf("Invalid waste level.\n");
+                return;
+            }
+            *bins[i].inumCurrentLevel = level;
+            printf("Waste Level Updated Successfully!\n");
+            return;
+        }
+    }
+    printf("Bin ID not found.\n");
+}
+
+void scheduleCollection() {
+    if (*inumScheduleCount >= MAX_BINS) {
+        printf("Cannot add more schedules. Limit reached.\n");
+        return;
+    }
+
+    CollectionSchedule schedule;
+    schedule.inumScheduleId = malloc(sizeof(int));
+    schedule.inumBinId = malloc(sizeof(int));
+
+    printf("Enter Schedule ID: ");
+    scanf("%d", schedule.inumScheduleId);
+    printf("Enter Bin ID: ");
+    scanf("%d", schedule.inumBinId);
+    getchar();
+    printf("Enter Collection Date (YYYY-MM-DD): ");
+    scanf("%[^\n]", schedule.cCollectionDate);
+    getchar();
+    printf("Enter Collection Time (HH:MM): ");
+    scanf("%[^\n]", schedule.cCollectionTime);
+
+    schedules[*inumScheduleCount] = schedule;
+    (*inumScheduleCount)++;
+    printf("Collection Scheduled Successfully!\n");
+}
+
+void displayBins() {
+    printf("\nBin Information:\n");
+    for (int i = 0; i < *inumBinCount; i++) {
+        printf("Bin ID: %d, Location: %s, Waste Type: %s, Capacity: %d, Current Level: %d%%\n",
+               *bins[i].inumBinId, bins[i].cLocation, bins[i].cWasteType, *bins[i].inumCapacity, *bins[i].inumCurrentLevel);
+    }
+}
+
+int main() {
+    inumBinCount = malloc(sizeof(int));
+    *inumBinCount = 0;
+    inumScheduleCount = malloc(sizeof(int));
+    *inumScheduleCount = 0;
+
+    int choice;
+
+    while (1) {
+        printf("\nWaste Management Tracker\n");
+        printf("1. Add Waste Bin\n");
+        printf("2. Update Waste Level\n");
+        printf("3. Schedule Collection\n");
+        printf("4. Display Bins\n");
+        printf("5. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                addWasteBin();
+                break;
+            case 2:
+                updateWasteLevel();
+                break;
+            case 3:
+                scheduleCollection();
+                break;
+            case 4:
+                displayBins();
+                break;
+            case 5:
+                printf("Exiting...\n");
+                free(inumBinCount);
+                free(inumScheduleCount);
+                return 0;
+            default:
+                printf("Invalid choice. Try again.\n");
+        }
+    }
+}
