@@ -1,0 +1,162 @@
+// Online C compiler to run C program online
+#include <stdio.h>
+#include<string.h>
+#define max_limit 100
+typedef struct{
+    int productId;
+    char productName[50];
+    int quantity;
+    float price;
+}Item;
+Item stocks[max_limit];
+int stockCount = 0;
+void addItem () {
+    if(stockCount>=max_limit){
+        printf("Stock limit reached. Cannot add more items.\n");
+        return;
+    }
+    Item firstItem;
+    printf("Enter product Id:");
+    scanf("%d",&firstItem.productId);
+    for(int i=0;i<stockCount;i++){
+        if(firstItem.productId==stocks[i].productId){
+            printf("Duplicate product id Found");
+            return;
+        }
+    }
+    getchar();
+    printf("Enter product Name: ");
+    scanf("%[^\n]",firstItem.productName);
+    printf("Enter product Quantity: ");
+    scanf("%d",&firstItem.quantity);
+    printf("Enter product price: ");
+    scanf("%f",&firstItem.price);
+    stocks[stockCount++]=firstItem;
+    printf("\nItem added Successfully!\n\n");
+}
+void searchProductId(){
+    int searchId;
+    printf("Enter Id to search: ");
+    scanf("%d",&searchId);
+    for(int i=0;i<stockCount;i++){
+        if(searchId==stocks[i].productId){
+            printf("Match Found!\n");
+            printf("product Id :%d\n",stocks[i].productId);
+            printf("product Name :%s\n",stocks[i].productName);
+            printf("product quantity :%d\n",stocks[i].quantity);
+            printf("product price :%.0f",stocks[i].price);
+            return;
+        }
+    }
+    printf("No match Found!");
+}
+void updatetheform(){
+    int updateId,i=0;
+     printf("Enter Update Id: ");
+    scanf("%d",&updateId);
+     int choice;
+    printf("What to update 1.Id/2.Name/3.Quantity/4.Price :");
+    scanf("%d",&choice);
+    switch(choice){
+        case 1:
+        int newId;
+        printf("Enter new ID: ");
+        scanf("%d",&newId);
+        for(int i=0;i<=stockCount;i++){
+            if(stocks[i].productId==updateId){
+                stocks[i].productId=newId;
+            }
+        }
+         printf(" updated :%d\n",stocks[i].productId);
+        printf("Updated Successfully\n");
+        break;
+        case 2:
+        char newName[50];
+        getchar();
+        printf("Enter new Name: ");
+        scanf("%[^\n]",newName);
+        for(int i=0;i<=stockCount;i++){
+            if(stocks[i].productId==updateId){
+                strcpy(stocks[i].productName,newName);
+        }
+        }
+        printf("updated :%s\n",stocks[i].productName);
+        printf("Updated Successfully\n");
+        break;
+        case 3:
+        int  newQuantity;
+        printf("Enter new Quantity: ");
+        scanf("%d",&newQuantity);
+        for(int i=0;i<=stockCount;i++){
+              if(stocks[i].productId==updateId){
+                  stocks[i].quantity=newQuantity;
+              }
+        }
+         printf("updated :%d\n",stocks[i].quantity);
+        printf("Updated Successfully\n");
+        break;
+        case 4:
+        int newPrice;
+        printf("Enter new Price");
+        scanf("%d",&newPrice);
+        for(int i=0;i<=stockCount;i++){
+            if(stocks[i].productId==updateId){
+                stocks[i].price=newPrice;
+            }
+        }
+        printf("updated :%d\n",stocks[i].price);
+        printf("Updated Successfully\n");
+        break;
+    }
+    }
+    void deleteProduct(){
+        int deleteId;
+        printf("Enter product Id to delete: ");
+        scanf("%d",&deleteId);
+        for(int i=0;i<stockCount;i++){
+            if(stocks[i].productId==deleteId){
+                for(int j=i;j<stockCount;j++){
+                    stocks[j]=stocks[j+1];
+                }
+                stockCount--;
+                printf("Item deleted Successfully");
+                return;
+            }
+        }
+        printf("Product Not Found!");
+    }
+    
+
+int main() {
+    int stockQuantity,i=0;
+    printf("Enter number of Quantity of Stocks: ");
+    scanf("%d",&stockQuantity);
+    while(i<stockQuantity){
+        addItem();
+        i++;
+    }
+    int ch;
+    printf("Want to search Product!(1 for Yes / 0 for No): ");
+    scanf("%d",&ch);
+    
+    if(ch==1){
+        searchProductId();
+    }
+    else{
+        printf("Thank You\n");
+    }
+    int update;
+    printf("Want to update: ");
+    scanf("%d",&update);
+    
+    if(update==1){
+        updatetheform();
+    }
+    int game;
+    printf("want to delete product:");
+    scanf("%d",&game);
+    if(game==1){
+        deleteProduct();
+    }
+    return 0;
+}
